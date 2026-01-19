@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Ripple Effect - Yin Yang</title>
+    <link rel="stylesheet" href="style4.css">
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    <script src="ParticlesDraw.js"></script>
+    <div class="yinyang"></div>
+    <div class="texture"></div>
+    <div class="fog"></div>
+    <div class="white"></div>
+    <div class="info-wrap">
+        <div class="info">
+            <h1>This is not an end.</h1>
+            <h1>Nor is it the beginning.</h1>
+        </div>
+
+        <div class="info2">
+            <h2 class="size">The current flows inside you</h2>
+            <h3 class="size">Nourishing all that you touch</h3>
+            <h4 class="size">In the way of Dhamar</h4>
+            <h5 class="size">Here you are</h5>
+            <h6 class="size">A tender soul.</h6>
+        </div>
+    </div>
+    <script>
+        // Center hover zone detection: show info2 + blur yin-yang when the cursor
+        // is inside the middle portion of the screen.
+        window.addEventListener('load', () => {
+            const yinyang = document.querySelector('.yinyang');
+            const info2 = document.querySelector('.info2');
+
+            if (!yinyang || !info2) return;
+
+            let active = false;
+            const computeZone = () => {
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+                // center 30% width x 40% height zone
+                const zw = w * 0.30, zh = h * 0.40;
+                return { x: (w - zw) / 2, y: (h - zh) / 2, w: zw, h: zh };
+            };
+
+            let zone = computeZone();
+            window.addEventListener('resize', () => { zone = computeZone(); });
+
+            const inZone = (x, y) => x >= zone.x && x <= zone.x + zone.w && y >= zone.y && y <= zone.y + zone.h;
+
+            const activate = () => {
+                if (active) return;
+                active = true;
+                yinyang.classList.add('blurred');
+                info2.classList.add('active');
+            };
+
+            const deactivate = () => {
+                if (!active) return;
+                active = false;
+                yinyang.classList.remove('blurred');
+                info2.classList.remove('active');
+            };
+
+            window.addEventListener('mousemove', (e) => {
+                if (inZone(e.clientX, e.clientY)) activate(); else deactivate();
+            });
+            // Initial state
+            deactivate();
+        });
+    </script>
+</body>

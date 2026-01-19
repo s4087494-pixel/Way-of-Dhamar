@@ -1,0 +1,130 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(to top, #ceebe6, #b2d2cc, #97bab3, #7da29a, #638b82);
+    font-family: Arial, sans-serif;
+}
+
+#buddha-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: translate(35%, 0%);
+    z-index: -10;
+}
+
+#hand-container {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    transform: translate(40%, 30%);
+    z-index:-10;
+    overflow: visible;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+
+.fog { 
+    background-image : url('assets/pictures/fog2.png');
+    background-size: cover;
+    position: absolute;
+      background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+    width: 100%;
+    height:120%;
+    pointer-events: none;
+    z-index: 10;
+bottom: 0px;
+
+}
+
+ .white { 
+    position: absolute;
+    width: 100%;
+    height:25%;
+    pointer-events: none;
+    z-index: -1;
+bottom: 0px;
+ background-image: linear-gradient(to top, #ffffff, #ffffff, #00000000);
+
+}
+
+.title {
+    position: absolute;
+    top: 32%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    z-index: 15;
+    pointer-events: none;
+}
+
+h1 { 
+    font-family: "cherry-blossoms-wide", sans-serif;
+font-weight: 600;
+font-style: normal;
+    font-size: 12em;
+        color: rgb(227, 189, 95);
+
+}
+
+h2 {
+ font-family: "legitima", serif;
+font-weight: 500;
+font-style: italic;
+    font-size: 1.5em;
+    color: rgb(64, 82, 70);
+    margin-top: -20px;
+    text-align: left;
+    pointer-events: auto;
+    cursor: pointer;
+    transition: color 200ms ease, text-shadow 200ms ease, filter 200ms ease;
+    text-shadow: 1 1 1 rgba(0,0,0,0);
+}
+
+.subtitle { 
+    width: 20%;
+    position: relative;
+    top: 45%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    z-index: 15;
+    pointer-events: auto;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+}
+
+/* Hover glow effect for h2 */
+.subtitle:hover h2,
+h2:hover {
+    color: rgb(40, 60, 50);
+    text-shadow: 0 0 8px rgba(255,255,255,0.7),
+                 0 0 16px rgb(190, 212, 221),
+                 0 0 32px rgb(141, 199, 199);
+    filter: brightness(1.1) saturate(1.1);
+}
+
+/* Anchor inside h2 should look like text */
+h2 a {
+    color: inherit;
+    text-decoration: none;
+    display: inline-block;
+}

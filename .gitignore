@@ -1,0 +1,21 @@
+# Cache files
+assets/3D/cache_ocean/
+assets/3D/blendcache_*/
+
+# Blender files (too large for GitHub Pages)
+*.blend
+*.blend1
+
+# 3D model files (keep only .glb)
+*.obj
+*.mtl
+
+# OS files
+.DS_Store
+._*
+
+# Node modules (if any)
+node_modules/
+
+# IDE
+.vscode/

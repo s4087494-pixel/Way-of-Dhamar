@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Models - Buddha & Hand</title>
+    <link rel="stylesheet" href="https://use.typekit.net/apq2zsr.css">
+    <link rel="stylesheet" href="style2.css">
+</head>
+
+<body>
+
+
+    <div class="guide"></div>
+    <div class="guide-blur-overlay"></div>
+
+    <div class="title2">
+        <h1>Something appears.</h1>
+        <h1> Notice what you do.</h1>
+    </div>
+    <div class="info">
+        <h3>Performs Gyan Mudra (index and thumb together) to reach Nirvana</h3>
+        <h3>Abandon yourself (both palms open) and descend to Asura</h3>
+    </div>
+    <div class="button"><a href="index3.html"><h3>Continue</h3></a></div>
+    <div class="fog"></div>
+    <div class="white"></div>
+    
+    <!-- Hand tracking overlay -->
+    <canvas id="canvasOutput" style="position: absolute; top: 10px; right: 10px; width: 200px; border: 2px solid white; z-index: 100;"></canvas>
+    <video id="handVideo" style="display: none;" autoplay playsinline muted></video>
+    <div id="gestureStatus" style="position: absolute; top: 10px; left: 10px; color: white; z-index: 100; background: rgba(0,0,0,0.7); padding: 10px; border-radius: 5px; font-family: monospace;">
+        <div>Left Hand: <span id="leftHandStatus">-</span></div>
+        <div>Right Hand: <span id="rightHandStatus">-</span></div>
+        <div>Progress: <span id="progressStatus">-</span></div>
+    </div>
+
+    <!-- MediaPipe Hands -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    
+    <!-- Hand gesture detection script -->
+    <script src="handDetect.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Models - Buddha & Hand</title>
+      <link rel="stylesheet" href="https://use.typekit.net/apq2zsr.css">
+    <link rel="stylesheet" href="style3.css">
+</head>
+
+<body>
+    <div id="nirvanaLayer" class="sceneLayer isOn">
+        <div id="nirvana"></div>
+        <div id="p5Overlay"></div>
+    </div>
+    <div id="asuraLayer" class="sceneLayer">
+        <div id="asura"></div>
+    </div>
+    <div id="loadingStatus"
+        style="position: absolute; top: 10px; left: 10px; color: white; z-index: 100; background: rgba(0,0,0,0.7); padding: 10px; border-radius: 5px; font-family: monospace;">
+        <div>Hand 1: <span id="hand1Status">-</span></div>
+        <div>Hand 2: <span id="hand2Status">-</span></div>
+        <div>Scene: <span id="sceneStatus">Loading...</span></div>
+    </div>
+    <canvas id="canvasOutput"
+        style="position: absolute; top: 10px; right: 10px; width: 200px; border: 2px solid white; z-index: 100;">
+    </canvas>
+    <video id="handVideo" style="display: none;" autoplay playsinline muted>
+    </video>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
+    <script src="handTracking.js"></script>
+    <script src="script4.js"></script>
+    <script src="script5.js"></script>
+    <script src="overlayWords.js"></script>
+    <script src="overlayWords2.js"></script>
+    <div class="title"><h1>Move right hand to reveal the words</h1></div>
+    <div class="fog"></div>
+    <div class="white"></div>
+    <div class="noise"></div>
+     <div class="button" id="delayedButton" style="display: none;"><a href="index4.html"><h3>Enter the stream</h3></a></div>
+    <script>
+        // Show button after 1 minutes (60000 milliseconds)
+        setTimeout(function() {
+            document.getElementById('delayedButton').style.display = 'block';
+        }, 30000);
+    </script>
+</body>
