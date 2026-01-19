@@ -52,11 +52,6 @@ document.addEventListener('mousemove', (event) => {
 // GLTF Loader
 const loader = new THREE.GLTFLoader();
 
-// Add DRACOLoader for Draco-compressed models
-const dracoLoader = new THREE.DRACOLoader();
-dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
-loader.setDRACOLoader(dracoLoader);
-
 // Load Buddha model
 loader.load('assets/3D/buddha.glb', (gltf) => {
     const model = gltf.scene;

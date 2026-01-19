@@ -39,12 +39,6 @@ handControls.maxPolarAngle = Math.PI * 0.7;
 
 // Load hand model
 const handLoader = new THREE.GLTFLoader();
-
-// Add DRACOLoader for Draco-compressed models
-const dracoLoader = new THREE.DRACOLoader();
-dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
-handLoader.setDRACOLoader(dracoLoader);
-
 handLoader.load('assets/3D/hand.glb', (gltf) => {
     const handModel = gltf.scene;
     
