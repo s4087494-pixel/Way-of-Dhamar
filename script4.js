@@ -103,12 +103,6 @@ let nirvanaLightData = []; // Store original positions and rotations
 
 // Load Nirvana model
 const nirvanaLoader = new THREE.GLTFLoader();
-
-// Add DRACOLoader for Draco-compressed models
-const dracoLoader = new THREE.DRACOLoader();
-dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
-nirvanaLoader.setDRACOLoader(dracoLoader);
-
 nirvanaLoader.load(
   "assets/3D/nirvana.glb",
   (gltf) => {
