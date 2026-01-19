@@ -66,11 +66,6 @@ asuraCamera.position.set(0, 1, 2.5);
 // Load Asura model
 const asuraLoader = new THREE.GLTFLoader();
 
-// Add DRACOLoader for Draco-compressed models
-const asuraDracoLoader = new THREE.DRACOLoader();
-asuraDracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
-asuraLoader.setDRACOLoader(asuraDracoLoader);
-
 asuraLoader.load(
     "assets/3D/asura.glb",
     (gltf) => {
