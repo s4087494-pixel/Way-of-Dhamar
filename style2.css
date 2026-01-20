@@ -51,7 +51,7 @@ bottom: 0px;
     width: 90%;
     height:90%;
     pointer-events: none;
-    background-image: url('assets/animation/guide.gif');
+    background-image: url('assets/animation/guide.webm');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
