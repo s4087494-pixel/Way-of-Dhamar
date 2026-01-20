@@ -153,19 +153,26 @@ const LINE_POS = [
     }
 
     function spawnLine(text) {
-      if (!font) return;
-
       const w = p.width, h = p.height;
 
       // Fixed formation position
    const pos = LINE_POS[lineIndex] || ANCHOR;
 const baseX = w * pos.x;
 const baseY = h * pos.y;
+      
+      // Add to revealed lines immediately (no font check)
+      revealedLines.push({ text, x: baseX, y: baseY, a: 0 });
+      
+      // Only create particle effects if font is loaded
+      if (!font) {
+        return;
+      }
+      
       // Center each line around anchor
       const textW = font.textBounds(text, 0, 0, STYLE.size).w;
       const x = baseX - textW / 2;
       const y = baseY;
-      revealedLines.push({ text, x: baseX, y: baseY, a: 0 });
+      
       const pts = font.textToPoints(text, x, y, STYLE.size, {
         sampleFactor: STYLE.sampleFactor
       });
@@ -189,17 +196,29 @@ const spawnY = baseY + p.random(-50, 50);
     }
 
     p.preload = () => {
-      // IMPORTANT: needs TTF or p5 may throw the OTF signature error
-      font = p.loadFont(STYLE.fontPath);
+      // Try to load custom font, but don't block if it fails
+      try {
+        font = p.loadFont(STYLE.fontPath, () => {
+          console.log('✓ Custom font loaded');
+        }, (err) => {
+          console.warn('⚠ Custom font failed, using default:', err);
+          font = null; // Use default p5 font
+        });
+      } catch (err) {
+        console.warn('⚠ Font loading error:', err);
+        font = null;
+      }
     };
 
     p.setup = () => {
       const r = nirvanaContainer.getBoundingClientRect();
-      const c = p.createCanvas(Math.max(1, r.width), Math.max(1, r.height));
+      const w = r.width > 0 ? r.width : window.innerWidth;
+      const h = r.height > 0 ? r.height : window.innerHeight;
+      const c = p.createCanvas(Math.max(1, w), Math.max(1, h));
       c.parent(overlayHost);
       p.clear();
 
-      p.textFont(font);
+      if (font) p.textFont(font);
       p.textStyle(p.ITALIC);
 
       window.addEventListener("resize", resizeToNirvana);
@@ -209,7 +228,7 @@ const spawnY = baseY + p.random(-50, 50);
       for (let i = 0; i < STORY_LINES.length; i++) {
         spawnLine(STORY_LINES[i]);
       }
-      lineIndex = STORY_LINES.length; // mark all lines as spawned
+      lineIndex = STORY_LINES.length;
     };
 
     p.draw = () => {
@@ -278,7 +297,7 @@ const spawnY = baseY + p.random(-50, 50);
       p.fill(STYLE.coreRGB[0], STYLE.coreRGB[1], STYLE.coreRGB[2]);
       p.textAlign(p.CENTER, p.BASELINE);
       p.textSize(STYLE.size);
-      p.textFont(font);
+      if (font) p.textFont(font);
       p.textStyle(p.ITALIC);
 
   for (let i = 0; i < revealedLines.length; i++) {
