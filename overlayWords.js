@@ -215,23 +215,21 @@ const spawnY = baseY + p.random(-50, 50);
       lineIndex++;
     }
 
-    p.preload = () => {
-      // IMPORTANT: needs TTF or p5 may throw the OTF signature error
-      try {
-        font = p.loadFont(STYLE.fontPath);
-      } catch (err) {
-        console.warn('Could not load custom font, using default:', err);
-        // Font will be undefined, p5 will use default
-      }
-    };
-
     p.setup = () => {
       const r = nirvanaContainer.getBoundingClientRect();
       const c = p.createCanvas(Math.max(1, r.width), Math.max(1, r.height));
       c.parent(overlayHost);
       p.clear();
 
-      p.textFont(font);
+      // Load font asynchronously without blocking setup
+      p.loadFont(STYLE.fontPath, (loadedFont) => {
+        font = loadedFont;
+        console.log('Custom font loaded successfully');
+      }, (err) => {
+        console.warn('Could not load custom font, using default:', err);
+        // Continue without custom font
+      });
+
       p.textStyle(p.ITALIC);
 
       window.addEventListener("resize", resizeToNirvana);
@@ -242,6 +240,8 @@ const spawnY = baseY + p.random(-50, 50);
         spawnLine(STORY_LINES[i]);
       }
       lineIndex = STORY_LINES.length; // mark all lines as spawned
+      
+      console.log('P5 sketch setup complete');
     };
 
     p.draw = () => {
@@ -310,7 +310,7 @@ const spawnY = baseY + p.random(-50, 50);
       p.fill(STYLE.coreRGB[0], STYLE.coreRGB[1], STYLE.coreRGB[2]);
       p.textAlign(p.CENTER, p.BASELINE);
       p.textSize(STYLE.size);
-      p.textFont(font);
+      if (font) p.textFont(font);
       p.textStyle(p.ITALIC);
 
   for (let i = 0; i < revealedLines.length; i++) {
