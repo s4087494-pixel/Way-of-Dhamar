@@ -1,15 +1,47 @@
-(function attachP5Overlay() {
+// Wait for p5 and DOM to be ready before initializing
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', attachP5Overlay);
+} else {
+  attachP5Overlay();
+}
+
+function attachP5Overlay() {
+  // Give p5 a moment to fully initialize
+  if (!window.p5) {
+    console.warn('p5 not ready, retrying...');
+    setTimeout(attachP5Overlay, 200);
+    return;
+  }
+
   window.__p5OverlayOwnedByScript4 = true;
-  if (!window.p5) return;
 
   const overlayHost = document.getElementById("p5Overlay");
   const nirvanaContainer = document.getElementById("nirvana");
-  if (!overlayHost || !nirvanaContainer) return;
+  if (!overlayHost || !nirvanaContainer) {
+    console.error('Missing elements for p5 overlay', { overlayHost, nirvanaContainer });
+    return;
+  }
 
   // Ensure overlay is positioned correctly
+  overlayHost.style.position = 'absolute';
+  overlayHost.style.inset = '0';
+  overlayHost.style.width = '100%';
+  overlayHost.style.height = '100%';
+  overlayHost.style.zIndex = '50';
+  overlayHost.style.pointerEvents = 'none';
+  overlayHost.style.left = '0';
+  overlayHost.style.top = '0';
+  
   const st = getComputedStyle(nirvanaContainer);
   if (st.position === "static") nirvanaContainer.style.position = "relative";
-  if (overlayHost.parentElement !== nirvanaContainer) nirvanaContainer.appendChild(overlayHost);
+  if (overlayHost.parentElement !== nirvanaContainer) {
+    nirvanaContainer.appendChild(overlayHost);
+  }
+  
+  console.log('P5 overlay initialized for nirvana', {
+    overlayHost: overlayHost.style.cssText,
+    nirvanaContainer: nirvanaContainer.style.position
+  });
 
   // === STORY ===
   const STORY_LINES = [
@@ -49,20 +81,22 @@ const STYLE = {
   // === FIXED POSITION (no flying around) ===
   // This is where the text FORMS on screen.
   // x: 0 left → 1 right, y: 0 top → 1 bottom
-  const ANCHOR = { x: 0.55, y: 0.72 };
+  const ANCHOR = { x: 0.50, y: 0.50 };
 // Per-line position offsets (0..1 of screen)
 // Edit these to place each sentence wherever you want.
 const LINE_POS = [
-  { x: 0.37, y: 0.42 }, // line 0
-  { x: 0.43, y: 0.48 }, // line 1
-  { x: 0.65, y: 0.56 }, // line 2
-  { x: 0.64, y: 0.64 }  // line 3
+  { x: 0.50, y: 0.42 }, // line 0
+  { x: 0.50, y: 0.48 }, // line 1
+  { x: 0.50, y: 0.54 }, // line 2
+  { x: 0.50, y: 0.60 }  // line 3
 ];
   // === HAND TRIGGER ===
   const SPAWN_THRESHOLD = 0.18;
   const SPAWN_COOLDOWN_MS = 1200;
   let clarity = 0; // 0..1, driven by right hand x
-  new p5((p) => {
+  
+  try {
+    new p5((p) => {
     let font;
     let particles = [];
     let lineIndex = 0;
@@ -89,7 +123,10 @@ const LINE_POS = [
     }
     function resizeToNirvana() {
       const r = nirvanaContainer.getBoundingClientRect();
-      p.resizeCanvas(Math.max(1, r.width), Math.max(1, r.height));
+      const w = r.width > 0 ? r.width : window.innerWidth;
+      const h = r.height > 0 ? r.height : window.innerHeight;
+      p.resizeCanvas(Math.max(1, w), Math.max(1, h));
+      console.log('Resized canvas to:', w, 'x', h);
     }
 
     class Particle {
@@ -153,19 +190,27 @@ const LINE_POS = [
     }
 
     function spawnLine(text) {
-      if (!font) return;
-
       const w = p.width, h = p.height;
 
       // Fixed formation position
    const pos = LINE_POS[lineIndex] || ANCHOR;
 const baseX = w * pos.x;
 const baseY = h * pos.y;
+      
+      // Add to revealed lines immediately
+      revealedLines.push({ text, x: baseX, y: baseY, a: 0 });
+      
+      // Only create particle effects if font is loaded
+      if (!font) {
+        console.log('Spawning line without particles (font not loaded yet):', text);
+        return;
+      }
+      
       // Center each line around anchor
       const textW = font.textBounds(text, 0, 0, STYLE.size).w;
       const x = baseX - textW / 2;
       const y = baseY;
-      revealedLines.push({ text, x: baseX, y: baseY, a: 0 });
+      
       const pts = font.textToPoints(text, x, y, STYLE.size, {
         sampleFactor: STYLE.sampleFactor
       });
@@ -188,18 +233,29 @@ const spawnY = baseY + p.random(-50, 50);
       lineIndex++;
     }
 
-    p.preload = () => {
-      // IMPORTANT: needs TTF or p5 may throw the OTF signature error
-      font = p.loadFont(STYLE.fontPath);
-    };
-
     p.setup = () => {
       const r = nirvanaContainer.getBoundingClientRect();
-      const c = p.createCanvas(Math.max(1, r.width), Math.max(1, r.height));
+      console.log('Nirvana container rect:', r);
+      
+      // Fallback to window dimensions if container has no size
+      const w = r.width > 0 ? r.width : window.innerWidth;
+      const h = r.height > 0 ? r.height : window.innerHeight;
+      
+      console.log('Creating canvas with dimensions:', w, 'x', h);
+      
+      const c = p.createCanvas(Math.max(1, w), Math.max(1, h));
       c.parent(overlayHost);
       p.clear();
 
-      p.textFont(font);
+      // Load font asynchronously without blocking setup
+      p.loadFont(STYLE.fontPath, (loadedFont) => {
+        font = loadedFont;
+        console.log('Custom font loaded successfully');
+      }, (err) => {
+        console.warn('Could not load custom font, using default:', err);
+        // Continue without custom font
+      });
+
       p.textStyle(p.ITALIC);
 
       window.addEventListener("resize", resizeToNirvana);
@@ -210,6 +266,8 @@ const spawnY = baseY + p.random(-50, 50);
         spawnLine(STORY_LINES[i]);
       }
       lineIndex = STORY_LINES.length; // mark all lines as spawned
+      
+      console.log('P5 sketch setup complete');
     };
 
     p.draw = () => {
@@ -278,12 +336,12 @@ const spawnY = baseY + p.random(-50, 50);
       p.fill(STYLE.coreRGB[0], STYLE.coreRGB[1], STYLE.coreRGB[2]);
       p.textAlign(p.CENTER, p.BASELINE);
       p.textSize(STYLE.size);
-      p.textFont(font);
+      if (font) p.textFont(font);
       p.textStyle(p.ITALIC);
 
   for (let i = 0; i < revealedLines.length; i++) {
   const line = revealedLines[i];
-  const a = 255 * clarity;
+  const a = 255 * (1 - clarity); // Inverted: text appears when clarity is LOW (hand on left)
 
   // 🌕 BIG soft background glow (blurred cloud)
  // 🌫️ BLURRED HALO (real blur, not just glow)
@@ -332,5 +390,6 @@ p.drawingContext.filter = "none";
 }
 
     };
-  });
-})();
+  });  } catch (err) {
+    console.error('Error initializing p5 sketch for nirvana:', err);
+  }}

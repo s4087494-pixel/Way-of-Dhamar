@@ -51,6 +51,20 @@ document.addEventListener('mousemove', (event) => {
     handMouseY = event.clientY / window.innerHeight;
 });
 
+// Function to get hand scale based on screen width
+function getHandScale() {
+    const screenWidth = window.innerWidth;
+    
+    if (screenWidth <= 1366) {
+        return 0.025; // Smaller for 1366×768
+    } else if (screenWidth <= 1536) {
+        return 0.028; // Medium for 1536×864
+    } else if (screenWidth >= 1920) {
+        return 0.035; // Larger for 1920×1080
+    }
+    return 0.03; // Default
+}
+
 // Load hand model
 const handLoader = new THREE.GLTFLoader();
 handLoader.load('assets/3D/hand.glb', (gltf) => {
@@ -93,8 +107,9 @@ handLoader.load('assets/3D/hand.glb', (gltf) => {
     dirLight.position.set(5, 10, 7.5);
     handScene.add(dirLight);
 
-    // Scale model smaller
-    handModel.scale.set(0.03, 0.03, 0.03);
+    // Scale model responsively based on screen size
+    const scale = getHandScale();
+    handModel.scale.set(scale, scale, scale);
     
     // Move model down
     handModel.position.y = -0.032;
@@ -133,4 +148,10 @@ window.addEventListener('resize', () => {
     handCamera.aspect = window.innerWidth / window.innerHeight;
     handCamera.updateProjectionMatrix();
     handRenderer.setSize(window.innerWidth, window.innerHeight);
+    
+    // Update hand scale for new screen size
+    if (handModel) {
+        const scale = getHandScale();
+        handModel.scale.set(scale, scale, scale);
+    }
 });
