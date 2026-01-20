@@ -93,11 +93,22 @@ bottom: 0px;
 }
 
 
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
 .title, .title h1 {
   position: absolute; 
   top: 7%;
   width: 100%;
     text-align: center;
+    animation: float 6s ease-in-out infinite;
+
     font-family: "legitima", serif;
     font-style:italic;
     font-weight: 500;

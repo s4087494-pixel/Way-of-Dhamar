@@ -77,7 +77,16 @@ font-weight: 600;
 font-style: normal;
     font-size: 12em;
         color: rgb(227, 189, 95);
+    animation: float 6s ease-in-out infinite;
+}
 
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
 }
 
 h2 {
@@ -92,6 +101,7 @@ font-style: italic;
     cursor: pointer;
     transition: color 200ms ease, text-shadow 200ms ease, filter 200ms ease;
     text-shadow: 1 1 1 rgba(0,0,0,0);
+    animation: float 7s ease-in-out infinite;
 }
 
 .subtitle { 

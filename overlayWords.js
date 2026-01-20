@@ -223,6 +223,7 @@ const spawnY = baseY + p.random(-50, 50);
       const open = isRightOpen();
       const rx = getRightX();
       const now = p.millis();
+      
       // ✅ clarity is controlled by how far right the hand is
       // tweak these two numbers to set the "clear zone"
       const CLEAR_START = 0.20;
@@ -231,6 +232,16 @@ const spawnY = baseY + p.random(-50, 50);
         ? 1 - p.constrain((rx - CLEAR_START) / (CLEAR_END - CLEAR_START), 0, 1)
         : 0;
 
+      // Apply blur to nirvana video based on right hand position
+      const nirvanaVideo = document.querySelector('#nirvana video');
+      if (nirvanaVideo && open) {
+        // Map clarity (0 to 1) to blur (0px to 20px)
+        // Higher clarity = more blur (flipped)
+        const blurAmount = clarity * 20;
+        nirvanaVideo.style.filter = `blur(${blurAmount}px)`;
+      } else if (nirvanaVideo && !open) {
+        nirvanaVideo.style.filter = 'blur(0px)';
+      }
 
       // accumulate motion only when open
       if (open) {

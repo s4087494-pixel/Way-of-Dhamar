@@ -23,10 +23,10 @@
 
   // === STORY ===
   const STORY_LINES = [
-    "Wholeness comes when seeing is clear.",
-    "No path carries me but my own steps.",
-    "Each action shapes the world I touch.",
-    "In knowing this, the mind rests."
+    "Fists clenching and blood dripping -",
+    "Hatred eviscerating wounds that never mend.",
+    "Greed seducing the mind,",
+    "Enslaved by its own suffering."
   ];
 
   // === LOOK ===
@@ -40,11 +40,11 @@ const STYLE = {
   strokeAlpha: 40,
 
   // text color
-  coreRGB: [255, 0, 0],
+  coreRGB: [255, 255, 255],
   coreAlpha: 100,
 
   // halo
-  glowRGB: [240, 0, 1],
+  glowRGB: [18, 207, 0],
   haloAlpha: 49,
 
   // text glow (ADD THESE because your later code uses them)
@@ -66,7 +66,7 @@ const LINE_POS = [
   { x: 0.37, y: 0.42 }, // line 0
   { x: 0.43, y: 0.48 }, // line 1
   { x: 0.65, y: 0.56 }, // line 2
-  { x: 0.61, y: 0.64 }  // line 3
+  { x: 0.64, y: 0.64 }  // line 3
 ];
   // === HAND TRIGGER ===
   const SPAWN_THRESHOLD = 0.18;
@@ -234,6 +234,7 @@ const spawnY = baseY + p.random(-50, 50);
       const open = isRightOpen();
       const rx = getRightX();
       const now = p.millis();
+      
       // ✅ clarity is controlled by how far right the hand is
       // tweak these two numbers to set the "clear zone"
       const CLEAR_START = 0.20;
@@ -242,6 +243,16 @@ const spawnY = baseY + p.random(-50, 50);
         ? 1 - p.constrain((rx - CLEAR_START) / (CLEAR_END - CLEAR_START), 0, 1)
         : 0;
 
+      // Apply blur to asura video based on right hand position
+      const asuraVideo = document.querySelector('#asura video');
+      if (asuraVideo && open) {
+        // Map clarity (0 to 1) to blur (0px to 20px)
+        // Higher clarity = more blur (flipped)
+        const blurAmount = clarity * 20;
+        asuraVideo.style.filter = `blur(${blurAmount}px)`;
+      } else if (asuraVideo && !open) {
+        asuraVideo.style.filter = 'blur(0px)';
+      }
 
       // accumulate motion only when open
       if (open) {

@@ -145,13 +145,9 @@ function updateSceneVisibility() {
 }
 
 function updateModelRotation() {
-  const rotationZ = (leftX - 0.5) * Math.PI * 2;
-
-  if (leftPinching && window.nirvanaModel) {
-    window.nirvanaModel.rotation.z = rotationZ;
-  } else if (!leftPinching && window.asuraModel) {
-    window.asuraModel.rotation.z = rotationZ;
-  }
+  // Videos don't need rotation like 3D models did
+  // Hand position can be used for other effects if needed in the future
+  // For now, this function does nothing since we're using plain videos
 }
 
 function onHandResults(results) {
