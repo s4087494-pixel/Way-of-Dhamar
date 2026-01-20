@@ -52,9 +52,14 @@ const getHandScaleFromWidth = (width) => {
 
 // Shift hand to the right on smaller screens (or think of it as camera nudging left)
 const getHandOffsetXFromWidth = (width) => {
-    const normalized = Math.min(Math.max(width / 1920, 0.5), 1.1);
-    // At 1920 -> 0, at ~1200 -> ~1.0, stronger shift for smaller screens
-    return (1 - normalized) * 1.3;
+    // 13-inch laptops are typically around 1280px wide
+    // Shift left (negative) on smaller screens, stay centered on larger
+    if (width >= 1366) {
+        return 0; // no shift on larger screens
+    }
+    // Shift left on smaller screens like 13" laptops
+    const normalized = width / 1366;
+    return (normalized - 1) * 0.8; // negative value to move left
 };
 
 // Load hand model

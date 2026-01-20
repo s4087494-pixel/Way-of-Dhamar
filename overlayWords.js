@@ -1,15 +1,40 @@
-(function attachP5Overlay() {
+// Wait for p5 and DOM to be ready before initializing
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', attachP5Overlay);
+} else {
+  attachP5Overlay();
+}
+
+function attachP5Overlay() {
+  // Give p5 a moment to fully initialize
+  if (!window.p5) {
+    console.warn('p5 not ready, retrying...');
+    setTimeout(attachP5Overlay, 200);
+    return;
+  }
+
   window.__p5OverlayOwnedByScript4 = true;
-  if (!window.p5) return;
 
   const overlayHost = document.getElementById("p5Overlay");
   const nirvanaContainer = document.getElementById("nirvana");
-  if (!overlayHost || !nirvanaContainer) return;
+  if (!overlayHost || !nirvanaContainer) {
+    console.error('Missing elements for p5 overlay', { overlayHost, nirvanaContainer });
+    return;
+  }
 
   // Ensure overlay is positioned correctly
+  overlayHost.style.position = 'absolute';
+  overlayHost.style.inset = '0';
+  overlayHost.style.width = '100%';
+  overlayHost.style.height = '100%';
+  
   const st = getComputedStyle(nirvanaContainer);
   if (st.position === "static") nirvanaContainer.style.position = "relative";
-  if (overlayHost.parentElement !== nirvanaContainer) nirvanaContainer.appendChild(overlayHost);
+  if (overlayHost.parentElement !== nirvanaContainer) {
+    nirvanaContainer.appendChild(overlayHost);
+  }
+  
+  console.log('P5 overlay initialized for nirvana');
 
   // === STORY ===
   const STORY_LINES = [
@@ -62,7 +87,9 @@ const LINE_POS = [
   const SPAWN_THRESHOLD = 0.18;
   const SPAWN_COOLDOWN_MS = 1200;
   let clarity = 0; // 0..1, driven by right hand x
-  new p5((p) => {
+  
+  try {
+    new p5((p) => {
     let font;
     let particles = [];
     let lineIndex = 0;
@@ -190,7 +217,12 @@ const spawnY = baseY + p.random(-50, 50);
 
     p.preload = () => {
       // IMPORTANT: needs TTF or p5 may throw the OTF signature error
-      font = p.loadFont(STYLE.fontPath);
+      try {
+        font = p.loadFont(STYLE.fontPath);
+      } catch (err) {
+        console.warn('Could not load custom font, using default:', err);
+        // Font will be undefined, p5 will use default
+      }
     };
 
     p.setup = () => {
@@ -332,5 +364,6 @@ p.drawingContext.filter = "none";
 }
 
     };
-  });
-})();
+  });  } catch (err) {
+    console.error('Error initializing p5 sketch for nirvana:', err);
+  }}

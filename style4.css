@@ -131,7 +131,7 @@ h6 { animation-delay: 1.6s; }
 .info2 {
     position: fixed;
     left: 50%;
-    top: 50%;
+    top: 60%;
     transform: translate(-50%, -50%);
     width: clamp(280px, 35%, 550px);
     height: auto;
