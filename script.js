@@ -123,9 +123,9 @@ loader.load('assets/3D/buddha.glb', (gltf) => {
     let scaleMultiplier = 1.5; // default buffer
     
     if (screenWidth <= 1366) {
-        scaleMultiplier = 1; // 1366×768 - smaller Buddha (increased for even smaller size)
+        scaleMultiplier = 2.2; // 1366×768 - smaller Buddha
     } else if (screenWidth <= 1536) {
-        scaleMultiplier = 2.0; // 1536×864 - medium Buddha (increased slightly)
+        scaleMultiplier = 1.8; // 1536×864 - medium Buddha
     } else if (screenWidth >= 1920) {
         scaleMultiplier = 1.3; // 1920×1080 - larger Buddha
     }

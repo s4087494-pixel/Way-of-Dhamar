@@ -27,6 +27,10 @@ function attachP5Overlay() {
   overlayHost.style.inset = '0';
   overlayHost.style.width = '100%';
   overlayHost.style.height = '100%';
+  overlayHost.style.zIndex = '50';
+  overlayHost.style.pointerEvents = 'none';
+  overlayHost.style.left = '0';
+  overlayHost.style.top = '0';
   
   const st = getComputedStyle(nirvanaContainer);
   if (st.position === "static") nirvanaContainer.style.position = "relative";
@@ -34,7 +38,10 @@ function attachP5Overlay() {
     nirvanaContainer.appendChild(overlayHost);
   }
   
-  console.log('P5 overlay initialized for nirvana');
+  console.log('P5 overlay initialized for nirvana', {
+    overlayHost: overlayHost.style.cssText,
+    nirvanaContainer: nirvanaContainer.style.position
+  });
 
   // === STORY ===
   const STORY_LINES = [
@@ -116,7 +123,10 @@ const LINE_POS = [
     }
     function resizeToNirvana() {
       const r = nirvanaContainer.getBoundingClientRect();
-      p.resizeCanvas(Math.max(1, r.width), Math.max(1, r.height));
+      const w = r.width > 0 ? r.width : window.innerWidth;
+      const h = r.height > 0 ? r.height : window.innerHeight;
+      p.resizeCanvas(Math.max(1, w), Math.max(1, h));
+      console.log('Resized canvas to:', w, 'x', h);
     }
 
     class Particle {
@@ -217,7 +227,15 @@ const spawnY = baseY + p.random(-50, 50);
 
     p.setup = () => {
       const r = nirvanaContainer.getBoundingClientRect();
-      const c = p.createCanvas(Math.max(1, r.width), Math.max(1, r.height));
+      console.log('Nirvana container rect:', r);
+      
+      // Fallback to window dimensions if container has no size
+      const w = r.width > 0 ? r.width : window.innerWidth;
+      const h = r.height > 0 ? r.height : window.innerHeight;
+      
+      console.log('Creating canvas with dimensions:', w, 'x', h);
+      
+      const c = p.createCanvas(Math.max(1, w), Math.max(1, h));
       c.parent(overlayHost);
       p.clear();
 
