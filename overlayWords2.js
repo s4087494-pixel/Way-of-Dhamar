@@ -40,7 +40,7 @@ const STYLE = {
   strokeAlpha: 40,
 
   // text color
-  coreRGB: [255, 255, 255],
+  coreRGB: [9, 51, 2],
   coreAlpha: 100,
 
   // halo
@@ -206,19 +206,30 @@ const spawnY = baseY + p.random(-50, 50);
       lineIndex++;
     }
 
+    let fontLoadPromise = null;
+    let fontReady = false;
+
     p.preload = () => {
       // Try to load custom font, but don't block if it fails
-      try {
-        font = p.loadFont(STYLE.fontPath, () => {
-          console.log('✓ Custom font loaded');
-        }, (err) => {
-          console.warn('⚠ Custom font failed, using default:', err);
-          font = null; // Use default p5 font
-        });
-      } catch (err) {
-        console.warn('⚠ Font loading error:', err);
-        font = null;
-      }
+      fontLoadPromise = new Promise((resolve) => {
+        try {
+          font = p.loadFont(STYLE.fontPath, () => {
+            console.log('✓ Custom font loaded');
+            fontReady = true;
+            resolve(true);
+          }, (err) => {
+            console.warn('⚠ Custom font failed, using default:', err);
+            font = null;
+            fontReady = true;
+            resolve(false);
+          });
+        } catch (err) {
+          console.warn('⚠ Font loading error:', err);
+          font = null;
+          fontReady = true;
+          resolve(false);
+        }
+      });
     };
 
     p.setup = () => {
@@ -235,11 +246,22 @@ const spawnY = baseY + p.random(-50, 50);
       window.addEventListener("resize", resizeToAsura);
       resizeToAsura();
       
-      // Auto-spawn all lines on load
-      for (let i = 0; i < STORY_LINES.length; i++) {
-        spawnLine(STORY_LINES[i]);
+      // Wait for font to load before spawning lines
+      if (fontLoadPromise) {
+        fontLoadPromise.then(() => {
+          for (let i = 0; i < STORY_LINES.length; i++) {
+            spawnLine(STORY_LINES[i]);
+          }
+          lineIndex = STORY_LINES.length;
+          console.log('✓ All lines spawned after font ready');
+        });
+      } else {
+        // Fallback if promise doesn't exist
+        for (let i = 0; i < STORY_LINES.length; i++) {
+          spawnLine(STORY_LINES[i]);
+        }
+        lineIndex = STORY_LINES.length;
       }
-      lineIndex = STORY_LINES.length;
     };
 
     p.draw = () => {
