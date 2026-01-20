@@ -143,8 +143,9 @@ h6 { animation-delay: 1.6s; }
     align-items: center;
     opacity: 0;
     transition: opacity 0.5s ease, filter 0.5s ease, transform 0.5s ease;
-    pointer-events: none;
+    pointer-events: auto;
     z-index: 100;
+    cursor: pointer;
 }
 
 .info2.active {

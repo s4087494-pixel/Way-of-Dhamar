@@ -25,14 +25,12 @@
             <h1>Nor is it the beginning.</h1>
         </div>
 
-        <div class="info2">
-            <a href="index.html" style="text-decoration: none; color: inherit; display: contents; pointer-events: none;">
-                <h2 class="size">The current flows inside you</h2>
-                <h3 class="size">Nourishing all that you touch</h3>
-                <h4 class="size">In the way of Dhamar</h4>
-                <h5 class="size">Here you are</h5>
-                <h6 class="size">A tender soul.</h6>
-            </a>
+        <div class="info2" style="cursor: pointer;">
+            <h2 class="size">The current flows inside you</h2>
+            <h3 class="size">Nourishing all that you touch</h3>
+            <h4 class="size">In the way of Dhamar</h4>
+            <h5 class="size">Here you are</h5>
+            <h6 class="size">A tender soul.</h6>
         </div>
     </div>
     <script>
@@ -46,16 +44,16 @@
             const computeZone = () => {
                 const w = window.innerWidth;
                 const h = window.innerHeight;
-                // Large hover zones for all screens
-                let zoneWidthPercent = 0.50;
-                let zoneHeightPercent = 0.60;
+                // Smaller hover zones - only show info2 when mouse is near center
+                let zoneWidthPercent = 0.25;
+                let zoneHeightPercent = 0.30;
                 
                 if (w <= 1450) {
-                    zoneWidthPercent = 0.80; // Small screens - 80% zone
-                    zoneHeightPercent = 0.80;
+                    zoneWidthPercent = 0.35; // Small screens - 35% zone
+                    zoneHeightPercent = 0.40;
                 } else if (w <= 1650) {
-                    zoneWidthPercent = 0.70; // Medium screens - 70% zone
-                    zoneHeightPercent = 0.75;
+                    zoneWidthPercent = 0.30; // Medium screens - 30% zone
+                    zoneHeightPercent = 0.35;
                 }
                 
                 const zw = w * zoneWidthPercent, zh = h * zoneHeightPercent;
@@ -92,6 +90,33 @@
             
             console.log('Hover detection active. Zone:', zone);
             deactivate();
+
+            // Make the whole .info2 clickable and keyboard-accessible to redirect to index.html
+            info2.setAttribute('role', 'link');
+            info2.tabIndex = 0;
+            info2.style.cursor = 'pointer';
+
+            // Add click handler to info2 and all children to ensure clicks are captured
+            const handleInfoClick = (e) => {
+                console.log('info2 or child clicked, redirecting to index.html', e);
+                e.stopPropagation();
+                window.location.href = 'index.html';
+            };
+
+            info2.addEventListener('click', handleInfoClick, true); // Use capture phase
+
+            // Also capture clicks on all child elements
+            info2.querySelectorAll('*').forEach(child => {
+                child.addEventListener('click', handleInfoClick, true);
+            });
+
+            info2.addEventListener('keydown', (ev) => {
+                if (ev.key === 'Enter' || ev.key === ' ') {
+                    console.log('info2 key pressed, redirecting to index.html');
+                    ev.preventDefault();
+                    window.location.href = 'index.html';
+                }
+            });
         }
     </script>
 </body>
