@@ -51,13 +51,14 @@ bottom: 0px;
     width: 90%;
     height:90%;
     pointer-events: none;
-    background-image: url('assets/animation/guide.webm');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     left: 52%;
     top: 55%;
     transform: translate(-50%, -50%);
+    object-fit: contain;
+}
     animation: dissolveIn 1.5s ease-in;
  filter: blur(4px);
     z-index: 5;
