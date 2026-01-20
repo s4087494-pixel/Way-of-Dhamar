@@ -190,19 +190,27 @@ const LINE_POS = [
     }
 
     function spawnLine(text) {
-      if (!font) return;
-
       const w = p.width, h = p.height;
 
       // Fixed formation position
    const pos = LINE_POS[lineIndex] || ANCHOR;
 const baseX = w * pos.x;
 const baseY = h * pos.y;
+      
+      // Add to revealed lines immediately
+      revealedLines.push({ text, x: baseX, y: baseY, a: 0 });
+      
+      // Only create particle effects if font is loaded
+      if (!font) {
+        console.log('Spawning line without particles (font not loaded yet):', text);
+        return;
+      }
+      
       // Center each line around anchor
       const textW = font.textBounds(text, 0, 0, STYLE.size).w;
       const x = baseX - textW / 2;
       const y = baseY;
-      revealedLines.push({ text, x: baseX, y: baseY, a: 0 });
+      
       const pts = font.textToPoints(text, x, y, STYLE.size, {
         sampleFactor: STYLE.sampleFactor
       });
@@ -333,7 +341,8 @@ const spawnY = baseY + p.random(-50, 50);
 
   for (let i = 0; i < revealedLines.length; i++) {
   const line = revealedLines[i];
-  const a = 255 * clarity;
+  // Always show text with at least 70% opacity, more when hand moves right
+  const a = Math.max(180, 255 * clarity);
 
   // 🌕 BIG soft background glow (blurred cloud)
  // 🌫️ BLURRED HALO (real blur, not just glow)
