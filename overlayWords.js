@@ -35,7 +35,7 @@ const STYLE = {
 
   // halo
   glowRGB: [255, 248, 200],
-  haloAlpha: 120,
+  haloAlpha: 49,
 
   // text glow (ADD THESE because your later code uses them)
   glowAlpha: 160,
