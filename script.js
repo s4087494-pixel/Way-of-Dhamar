@@ -117,13 +117,26 @@ loader.load('assets/3D/buddha.glb', (gltf) => {
     const maxDim = Math.max(size.x, size.y, size.z);
     const fov = camera.fov * (Math.PI / 180);
     let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
-    cameraZ *= 1.5; // Add some buffer
+    
+    // Responsive scaling: 1366×768, 1536×864, 1920×1080
+    const screenWidth = window.innerWidth;
+    let scaleMultiplier = 1.5; // default buffer
+    
+    if (screenWidth <= 1366) {
+        scaleMultiplier = 1; // 1366×768 - smaller Buddha (increased for even smaller size)
+    } else if (screenWidth <= 1536) {
+        scaleMultiplier = 2.0; // 1536×864 - medium Buddha (increased slightly)
+    } else if (screenWidth >= 1920) {
+        scaleMultiplier = 1.3; // 1920×1080 - larger Buddha
+    }
+    
+    cameraZ *= scaleMultiplier;
     
     camera.position.z = cameraZ;
     controls.target.set(0, 0, 0);
     controls.update();
     
-    console.log('Camera positioned at z:', cameraZ);
+    console.log('Camera positioned at z:', cameraZ, 'for screen width:', screenWidth);
     
 }, (progress) => {
     console.log('Buddha loading:', (progress.loaded / progress.total * 100).toFixed(2) + '%');
@@ -132,7 +145,6 @@ loader.load('assets/3D/buddha.glb', (gltf) => {
 });
 
 // No extra scene lights; using only lights exported from Blender.
-
 // Handle window resize
 window.addEventListener('resize', () => {
     const width = window.innerWidth;

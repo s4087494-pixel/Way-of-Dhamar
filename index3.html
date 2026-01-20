@@ -28,9 +28,12 @@
     </canvas>
     <video id="handVideo" style="display: none;" autoplay playsinline muted>
     </video>
+    <!-- Load p5 first -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
+    <!-- Then MediaPipe -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
+    <!-- Then other scripts -->
     <script src="handTracking.js"></script>
     <script src="script4.js"></script>
     <script src="script5.js"></script>

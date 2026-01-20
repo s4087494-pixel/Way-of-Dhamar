@@ -16,15 +16,17 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
-    transform: translate(35%, 0%);
+    transform: translate(clamp(30%, 35vw, 40%), 0%);
     z-index: -10;
 }
 
 #hand-container {
     position: absolute;
-    width: 50%;
+    left: 5%;
+    top:5%;
+    width: clamp(40%, 50vw, 60%);
     height: 100%;
-    transform: translate(40%, 30%);
+    transform: translate(clamp(35%, 40vw, 45%), clamp(25%, 30vh, 35%));
     z-index:-10;
     overflow: visible;
 }
@@ -53,7 +55,8 @@ bottom: 0px;
 
  .white { 
     position: absolute;
-    width: 100%;
+
+    width: 100vw;
     height:25%;
     pointer-events: none;
     z-index: -1;
@@ -64,8 +67,8 @@ bottom: 0px;
 
 .title {
     position: absolute;
-    top: 32%;
-    left: 30%;
+    top: clamp(28%, 32vh, 35%);
+    left: clamp(25%, 30vw, 32%);
     transform: translate(-50%, -50%);
     z-index: 15;
     pointer-events: none;
@@ -75,8 +78,8 @@ h1 {
     font-family: "cherry-blossoms-wide", sans-serif;
 font-weight: 600;
 font-style: normal;
-    font-size: 12em;
-        color: rgb(227, 189, 95);
+    font-size: clamp(6em, 10vw, 12em);
+    color: rgb(227, 189, 95);
     animation: float 6s ease-in-out infinite;
 }
 
@@ -93,7 +96,7 @@ h2 {
  font-family: "legitima", serif;
 font-weight: 500;
 font-style: italic;
-    font-size: 1.5em;
+    font-size: clamp(1rem, 1.5vw, 1.5em);
     color: rgb(64, 82, 70);
     margin-top: -20px;
     text-align: left;
@@ -105,10 +108,10 @@ font-style: italic;
 }
 
 .subtitle { 
-    width: 20%;
+    width: clamp(300px, 25vw, 600px);
     position: relative;
-    top: 45%;
-    left: 45%;
+    top: clamp(42%, 45vh, 48%);
+    left: clamp(42%, 45vw, 48%);
     transform: translate(-50%, -50%);
     z-index: 15;
     pointer-events: auto;
@@ -118,8 +121,36 @@ font-style: italic;
     display: block;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: clamp(10px, 1.5vw, 20px);
 
+}
+
+/* Responsive breakpoints: 1366×768, 1536×864, 1920×1080 */
+@media (max-width: 1366px) {
+    .subtitle {
+        width: clamp(280px, 28%, 450px);
+    }
+    h1 {
+        font-size: clamp(5em, 9vw, 10em);
+    }
+    h2 {
+        font-size: clamp(0.9rem, 1.3vw, 1.3em);
+    }
+}
+
+@media (min-width: 1367px) and (max-width: 1536px) {
+    h1 {
+        font-size: clamp(6em, 9.5vw, 11em);
+    }
+}
+
+@media (min-width: 1920px) {
+    h1 {
+        font-size: clamp(8em, 11vw, 14em);
+    }
+    h2 {
+        font-size: clamp(1.2rem, 1.6vw, 1.7em);
+    }
 }
 
 /* Hover glow effect for h2 */

@@ -5,6 +5,13 @@ body {
     background: linear-gradient(to top, #ceebe6, #b2d2cc, #97bab3, #7da29a, #638b82);
 }
 
+/* Ensure p5 canvas doesn't block mouse events */
+canvas {
+    pointer-events: none !important;
+    position: fixed !important;
+    z-index: 5 !important;
+}
+
 .texture {
     background-image: url('assets/pictures/texture2.png');
     background-size: cover;
@@ -63,7 +70,7 @@ body {
     width: 100%;
     height: 10%;
     pointer-events: none;
-    z-index: 1000;
+    z-index: 25;
     bottom: 0px;
     background-image: linear-gradient(to top, #ffffff, #00000000);
 
@@ -122,23 +129,28 @@ h6 { animation-delay: 1.6s; }
 }
 
 .info2 {
-    position: absolute;
-    left: 42%;
-    top: 34%;
-    width: 50%;
-    height: 50%;
-    text-align: left;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: clamp(280px, 35%, 550px);
+    height: auto;
+    text-align: center;
     display: flex;
     flex-direction: column;
+    gap: 0.3rem;
+    justify-content: center;
+    align-items: center;
     opacity: 0;
-    transition: opacity 0.4s ease, filter 0.4s ease;
+    transition: opacity 0.5s ease, filter 0.5s ease, transform 0.5s ease;
     pointer-events: none;
+    z-index: 100;
 }
 
 .info2.active {
     opacity: 1;
-    pointer-events: auto;
     filter: drop-shadow(0 0 20px rgba(255,255,255,0.85)) drop-shadow(0 0 40px rgba(200,230,220,0.7));
+    transform: translate(-50%, -50%) scale(1.05);
 }
 
 .info2.active h2,
@@ -151,27 +163,47 @@ h6 { animation-delay: 1.6s; }
 
 h3 {
     position: relative;
-    left: 10%;
 }
 
 h4 {
     position: relative;
-    top: -5%;
 }
 
 h5 { 
     position: relative;
-    top: 10%;
-    text-align: center;
-    left: -33%;
 }
 
 h6 { 
     position: relative;
-    top: -27%;
-    text-align: center;
-    left: -33%;
 }
 .size {
-    font-size: 2rem;
+    font-size: clamp(0.9rem, 1.5vw, 1.5rem);
+}
+
+/* Responsive breakpoints: 1366×768, 1536×864, 1920×1080 */
+@media (max-width: 1366px) {
+    .size {
+        font-size: clamp(0.8rem, 1.3vw, 1.3rem);
+    }
+    .info2 {
+        width: clamp(250px, 32%, 500px);
+    }
+}
+
+@media (min-width: 1367px) and (max-width: 1536px) {
+    .size {
+        font-size: clamp(0.9rem, 1.4vw, 1.5rem);
+    }
+    .info2 {
+        width: clamp(270px, 35%, 530px);
+    }
+}
+
+@media (min-width: 1920px) {
+    .size {
+        font-size: clamp(1.1rem, 1.8vw, 1.9rem);
+    }
+    .info2 {
+        width: clamp(320px, 38%, 600px);
+    }
 }

@@ -1,5 +1,7 @@
 // Hand Scene - Completely Independent from Buddha
 const handScene = new THREE.Scene();
+let handModel = null; // keep reference for responsive scaling/offset
+let handBaseTarget = null; // base target to realign camera on resize
 const handRenderer = new THREE.WebGLRenderer({ 
     antialias: true, 
     alpha: true 
@@ -37,10 +39,28 @@ handControls.enablePan = false;
 handControls.minPolarAngle = Math.PI * 0.3; // Limit vertical rotation
 handControls.maxPolarAngle = Math.PI * 0.7;
 
+// Helper to derive a safe hand scale based on container width
+const getHandScaleFromWidth = (width) => {
+    // Keep original size on all screens, only reduce slightly on very small screens to prevent clipping
+    if (width >= 1366) {
+        return 0.8; // original size
+    }
+    // Only scale down below 1366px
+    const normalized = width / 1366;
+    return 0.5 * Math.max(normalized, 0.85); // minimal reduction only for very small screens
+};
+
+// Shift hand to the right on smaller screens (or think of it as camera nudging left)
+const getHandOffsetXFromWidth = (width) => {
+    const normalized = Math.min(Math.max(width / 1920, 0.5), 1.1);
+    // At 1920 -> 0, at ~1200 -> ~1.0, stronger shift for smaller screens
+    return (1 - normalized) * 1.3;
+};
+
 // Load hand model
 const handLoader = new THREE.GLTFLoader();
 handLoader.load('assets/3D/hand.glb', (gltf) => {
-    const handModel = gltf.scene;
+    handModel = gltf.scene;
     
     // Play animations if available
     let mixer;
@@ -70,6 +90,7 @@ handLoader.load('assets/3D/hand.glb', (gltf) => {
         handControls.object = handCamera;
         handControls.target.set(0, 0, 0);
         handControls.update();
+        handBaseTarget = handControls.target.clone();
         
         console.log('Using hand camera from GLB at position:', handCamera.position);
         handScene.add(handCamera);
@@ -80,6 +101,7 @@ handLoader.load('assets/3D/hand.glb', (gltf) => {
         initialHandCameraPos = handCamera.position.clone();
         handControls.target.set(0, 0, 0);
         handControls.update();
+        handBaseTarget = handControls.target.clone();
     }
     
     let lightCount = 0;
@@ -122,8 +144,8 @@ handLoader.load('assets/3D/hand.glb', (gltf) => {
     // Vertical lift offset to place the model higher in the view
     const liftY = size.y * 0.2;
 
-    // Global scale to make the hand smaller (adjust scalar as desired)
-    handModel.scale.multiplyScalar(0.5);
+    // Global scale based on current container width to reduce clipping
+    handModel.scale.setScalar(getHandScaleFromWidth(containerRect.width));
 
     // If using GLB camera, make sure it and the controls look at the model center
     if (gltf.cameras && gltf.cameras.length > 0) {
@@ -154,6 +176,18 @@ handLoader.load('assets/3D/hand.glb', (gltf) => {
     } else {
         // With GLB camera: keep original model transform to preserve framing
         handScene.add(handModel);
+    }
+
+    // Store base position and apply horizontal offset based on current width
+    const offsetX = getHandOffsetXFromWidth(containerRect.width);
+    handModel.userData.basePosition = handModel.position.clone();
+    handModel.position.x = handModel.userData.basePosition.x + offsetX;
+    if (!handBaseTarget) {
+        handBaseTarget = handControls.target.clone();
+    }
+    if (handBaseTarget) {
+        handControls.target.x = handBaseTarget.x + offsetX;
+        handControls.update();
     }
     
     console.log('Hand model loaded. Size:', size);
@@ -196,5 +230,16 @@ window.addEventListener('resize', () => {
     const rect = handContainer.getBoundingClientRect();
     handCamera.aspect = rect.width / rect.height;
     handCamera.updateProjectionMatrix();
+    // Rescale hand to keep composition and avoid clipping on resize
+    if (handModel) {
+        handModel.scale.setScalar(getHandScaleFromWidth(rect.width));
+        const offsetX = getHandOffsetXFromWidth(rect.width);
+        const baseX = handModel.userData.basePosition ? handModel.userData.basePosition.x : 0;
+        handModel.position.x = baseX + offsetX;
+        if (handBaseTarget) {
+            handControls.target.x = handBaseTarget.x + offsetX;
+            handControls.update();
+        }
+    }
     handRenderer.setSize(rect.width, rect.height);
 });

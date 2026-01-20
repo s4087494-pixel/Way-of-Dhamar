@@ -117,8 +117,8 @@ function mouseReleased() {
 
 function touchStarted() {
   isDragging = true;
-  lastX = touchX;
-  lastY = touchY;
+  lastX = touches.length > 0 ? touches[0].x : mouseX;
+  lastY = touches.length > 0 ? touches[0].y : mouseY;
   return false;
 }
 
@@ -129,8 +129,8 @@ function touchEnded() {
 
 // Touch support: draw by finger drag
 function touchMoved() {
-  if (isDragging) {
-    spawnOnMove(touchX, touchY);
+  if (isDragging && touches.length > 0) {
+    spawnOnMove(touches[0].x, touches[0].y);
   }
   return false; // prevent page scroll
 }
