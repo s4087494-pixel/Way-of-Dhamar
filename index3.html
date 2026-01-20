@@ -40,11 +40,43 @@
     <div class="fog"></div>
     <div class="white"></div>
     <div class="noise"></div>
-     <div class="button" id="delayedButton" style="display: none;"><a href="index4.html"><h3>Enter the stream</h3></a></div>
-    <script>
-        // Show button after 1 minutes (60000 milliseconds)
-        setTimeout(function() {
-            document.getElementById('delayedButton').style.display = 'block';
+    <div class="button" id="delayedButton" style="display: none;">
+        <a class="btn-stream" href="index4.html" aria-label="Enter the stream">
+            <video autoplay loop muted playsinline preload="auto" poster="assets/pictures/texture2.png">
+                <source src="assets/animation/button_stream2.mov" type="video/quicktime">
+                <!-- If you add an mp4 later, place it here for broader support -->
+            </video>
+        </a>
+     </div>
+     <script>
+        // Pick the first playable source for the button video
+        (function ensureButtonVideoPlays() {
+            const video = document.querySelector('.btn-stream video');
+            if (!video) return;
+
+            const sources = [
+                // Try MOV first (some browsers handle this better than webm with alpha)
+                { src: 'assets/animation/button_stream2.mov', type: 'video/quicktime' },
+                { src: 'assets/animation/button_stream2.webm', type: 'video/webm' }
+            ];
+
+            const playable = sources.find(s => video.canPlayType && video.canPlayType(s.type).replace(/no/, ''));
+            const chosen = playable || sources[0];
+            video.src = chosen.src;
+            video.load();
+            video.play().catch(() => {
+                // Autoplay might be blocked; poster still shows
+            });
+
+            video.addEventListener('error', () => {
+                console.warn('Button video failed to load; showing poster only.', video.error);
+            });
+        })();
+
+        // Show button after 30 seconds
+        setTimeout(() => {
+            const btn = document.getElementById('delayedButton');
+            if (btn) btn.style.display = 'block';
         }, 30000);
-    </script>
+     </script>
 </body>
