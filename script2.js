@@ -113,9 +113,13 @@ handLoader.load('assets/3D/hand.glb', (gltf) => {
     const scale = getHandScale() * 0.5; // 50% smaller
     handModel.scale.set(scale, scale, scale);
     
-    // Position hand - down slightly
+    // Position hand - up a bit on small screens
     handModel.position.x = 0;
-    handModel.position.y = -0.02;
+    if (window.innerWidth <= 1366) {
+        handModel.position.y = 0.08; // move up for 13" laptops
+    } else {
+        handModel.position.y = -0.02;
+    }
     handModel.position.z = 0;
     
     // Add model to scene
