@@ -2,7 +2,7 @@
   window.__p5OverlayOwnedByScript5 = true;
   if (!window.p5) return;
 
-  // Create a separate overlay for asura scene
+
   let overlayHost = document.getElementById("p5OverlayAsura");
   if (!overlayHost) {
     overlayHost = document.createElement("div");
@@ -16,7 +16,7 @@
   const asuraContainer = document.getElementById("asura");
   if (!asuraContainer) return;
 
-  // Ensure overlay is positioned correctly
+
   const st = getComputedStyle(asuraContainer);
   if (st.position === "static") asuraContainer.style.position = "relative";
   if (overlayHost.parentElement !== asuraContainer) asuraContainer.appendChild(overlayHost);
@@ -47,7 +47,7 @@ const STYLE = {
   glowRGB: [18, 207, 0],
   haloAlpha: 49,
 
-  // text glow (ADD THESE because your later code uses them)
+  // text glow 
   glowAlpha: 160,
   glowBlur: 18
 };
@@ -56,12 +56,8 @@ const STYLE = {
 
 
 
-  // === FIXED POSITION (no flying around) ===
-  // This is where the text FORMS on screen.
-  // x: 0 left → 1 right, y: 0 top → 1 bottom
+
   const ANCHOR = { x: 0.55, y: 0.72 };
-// Per-line position offsets (0..1 of screen)
-// Edit these to place each sentence wherever you want.
 const LINE_POS = [
   { x: 0.37, y: 0.42 }, // line 0
   { x: 0.43, y: 0.48 }, // line 1
@@ -303,17 +299,6 @@ const spawnY = baseY + p.random(-50, 50);
         handMotion = Math.max(0, handMotion - 0.02);
       }
 
-      // spawn next line - DISABLED since all lines auto-spawn on load
-      // if (
-      //   open &&
-      //   handMotion > SPAWN_THRESHOLD &&
-      //   now - lastSpawnMs > SPAWN_COOLDOWN_MS &&
-      //   lineIndex < STORY_LINES.length
-      // ) {
-      //   spawnLine(STORY_LINES[lineIndex]);
-      //   handMotion *= 0.35;
-      //   lastSpawnMs = now;
-      // }
 
       lastRightX = rx;
 
@@ -325,7 +310,7 @@ const spawnY = baseY + p.random(-50, 50);
         // optional cleanup when stable (keeps fps good)
         if (pt.done() && particles.length > 9000) particles.splice(i, 1);
       }
-      // ✅ draw solid words (fade in) on top of particles
+      // draw solid words (fade in) on top of particles
       p.noStroke();
       p.fill(STYLE.coreRGB[0], STYLE.coreRGB[1], STYLE.coreRGB[2]);
       p.textAlign(p.CENTER, p.BASELINE);
@@ -337,15 +322,10 @@ const spawnY = baseY + p.random(-50, 50);
   const line = revealedLines[i];
   const a = 255 * clarity;
 
-  // 🌕 BIG soft background glow (blurred cloud)
- // 🌫️ BLURRED HALO (real blur, not just glow)
 p.noStroke();
 
-// ⬇️ ACTUAL blur - increased for more blur effect
 p.drawingContext.filter = `blur(${p.lerp(48, 28, clarity)}px)`;
 
-
-// soft yellow mist color
 p.fill(
   STYLE.glowRGB[0],
   STYLE.glowRGB[1],
@@ -353,7 +333,6 @@ p.fill(
   STYLE.haloAlpha * clarity
 );
 
-// draw halo - reduced width
 p.ellipse(
   line.x,
   line.y - STYLE.size * 0.35,
@@ -361,16 +340,13 @@ p.ellipse(
   STYLE.size * 1
 );
 
-// ⬆️ IMPORTANT: reset filter so text stays sharp
 p.drawingContext.filter = "none";
 
 
-  // ✨ TEXT GLOW (inner light)
   p.drawingContext.shadowColor =
     `rgba(${STYLE.glowRGB[0]},${STYLE.glowRGB[1]},${STYLE.glowRGB[2]},${STYLE.glowAlpha / 255})`;
   p.drawingContext.shadowBlur = STYLE.glowBlur;
 
-  // ✍️ GOLD TEXT
   p.fill(
     STYLE.coreRGB[0],
     STYLE.coreRGB[1],
@@ -378,8 +354,7 @@ p.drawingContext.filter = "none";
     a
   );
   p.text(line.text, line.x, line.y);
-
-  // 🧹 reset shadows so particles don't glow
+  
   p.drawingContext.shadowBlur = 0;
 }
 

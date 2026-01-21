@@ -28,12 +28,12 @@
     </canvas>
     <video id="handVideo" style="display: none;" autoplay playsinline muted>
     </video>
-    <!-- Load p5 first -->
+    <!-- Load p5-->
     <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
-    <!-- Then MediaPipe -->
+    <!-- MediaPipe -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
-    <!-- Then other scripts -->
+    <!-- other scripts -->
     <script src="handTracking.js"></script>
     <script src="script4.js"></script>
     <script src="script5.js"></script>
@@ -47,18 +47,18 @@
         <a class="btn-stream" href="index4.html" aria-label="Enter the stream">
             <video autoplay loop muted playsinline preload="auto" poster="assets/pictures/texture2.png">
                 <source src="assets/animation/button_stream2.mov" type="video/quicktime">
-                <!-- If you add an mp4 later, place it here for broader support -->
+               
             </video>
         </a>
      </div>
      <script>
-        // Pick the first playable source for the button video
+ 
         (function ensureButtonVideoPlays() {
             const video = document.querySelector('.btn-stream video');
             if (!video) return;
 
             const sources = [
-                // Try MOV first (some browsers handle this better than webm with alpha)
+      
                 { src: 'assets/animation/button_stream2.mov', type: 'video/quicktime' },
                 { src: 'assets/animation/button_stream2.webm', type: 'video/webm' }
             ];
@@ -68,7 +68,7 @@
             video.src = chosen.src;
             video.load();
             video.play().catch(() => {
-                // Autoplay might be blocked; poster still shows
+    
             });
 
             video.addEventListener('error', () => {

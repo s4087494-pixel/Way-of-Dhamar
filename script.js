@@ -13,7 +13,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 document.getElementById('buddha-container').appendChild(renderer.domElement);
-// Color management and tone mapping to avoid blown-out highlights
+// Color management and tone mapping
 renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 0.6;
@@ -29,10 +29,9 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.autoRotate = false;
 controls.enablePan = false;
-controls.minPolarAngle = Math.PI * 0.3; // Limit vertical rotation
+controls.minPolarAngle = Math.PI * 0.3; 
 controls.maxPolarAngle = Math.PI * 0.7;
 
-// Store initial camera position for parallax effect
 let initialCameraPos = camera.position.clone();
 const parallaxAmount = 0.3;
 
@@ -55,9 +54,9 @@ const loader = new THREE.GLTFLoader();
 // Load Buddha model
 loader.load('assets/3D/buddha.glb', (gltf) => {
     const model = gltf.scene;
-    buddhaModel = model; // Store reference for animation
+    buddhaModel = model; 
     
-    // Load animations if available
+    // Load animations
     if (gltf.animations && gltf.animations.length > 0) {
         buddhaMixer = new THREE.AnimationMixer(model);
         gltf.animations.forEach((clip) => {
@@ -123,11 +122,11 @@ loader.load('assets/3D/buddha.glb', (gltf) => {
     let scaleMultiplier = 1.5; // default buffer
     
     if (screenWidth <= 1366) {
-        scaleMultiplier = 2.2; // 1366×768 - smaller Buddha
+        scaleMultiplier = 2.2; // 1366×768 - smaller 
     } else if (screenWidth <= 1536) {
-        scaleMultiplier = 1.8; // 1536×864 - medium Buddha
+        scaleMultiplier = 1.8; // 1536×864 - medium 
     } else if (screenWidth >= 1920) {
-        scaleMultiplier = 1.3; // 1920×1080 - larger Buddha
+        scaleMultiplier = 1.3; // 1920×1080 - larger 
     }
     
     cameraZ *= scaleMultiplier;
@@ -144,8 +143,7 @@ loader.load('assets/3D/buddha.glb', (gltf) => {
     console.error('Error loading Buddha:', error);
 });
 
-// No extra scene lights; using only lights exported from Blender.
-// Handle window resize
+
 window.addEventListener('resize', () => {
     const width = window.innerWidth;
     const height = window.innerHeight;

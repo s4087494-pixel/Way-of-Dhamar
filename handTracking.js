@@ -1,10 +1,10 @@
 // Hand Tracking Controller
 // Switches between Nirvana (pinch) and Asura (no pinch)
-// Rotates model on z-axis based on hand horizontal position
+
 
 console.log('Hand tracking script loaded');
 
-// Global state - MUST be accessible to onHandResults
+
 let leftPinching = false;
 let leftX = 0.5;
 let rightOpen = false;
@@ -12,10 +12,10 @@ let rightX = 0.5;
 let hasHands = false;
 
 // Pinch smoothing + hysteresis
-const PINCH_ON = 0.070;          // Smoothed distance to switch ON
-const PINCH_ON_FAST = 0.055;     // Raw distance to instantly latch ON
-const PINCH_OFF = 0.095;         // Smoothed distance to release
-const PINCH_SMOOTH = 0.45;       // Higher = snappier but a bit noisier
+const PINCH_ON = 0.070;          
+const PINCH_ON_FAST = 0.055;    
+const PINCH_OFF = 0.095;        
+const PINCH_SMOOTH = 0.45;      
 let smoothedLeftPinchDist = null;
 
 // Canvas references
@@ -68,7 +68,7 @@ function drawHandLandmarks(landmarks, color = '#00FF00') {
     connections.forEach(([start, end]) => {
         const startLm = landmarks[start];
         const endLm = landmarks[end];
-        // Flip X coordinate: (1 - x) instead of x
+  
         canvasCtx.beginPath();
         canvasCtx.moveTo((1 - startLm.x) * width, startLm.y * height);
         canvasCtx.lineTo((1 - endLm.x) * width, endLm.y * height);
@@ -78,7 +78,7 @@ function drawHandLandmarks(landmarks, color = '#00FF00') {
     canvasCtx.fillStyle = color;
     landmarks.forEach(landmark => {
         canvasCtx.beginPath();
-        // Flip X coordinate: (1 - x) instead of x
+ 
         canvasCtx.arc((1 - landmark.x) * width, landmark.y * height, 3, 0, 2 * Math.PI);
         canvasCtx.fill();
     });
@@ -144,15 +144,10 @@ function updateSceneVisibility() {
   }
 }
 
-function updateModelRotation() {
-  // Videos don't need rotation like 3D models did
-  // Hand position can be used for other effects if needed in the future
-  // For now, this function does nothing since we're using plain videos
-}
 
 function onHandResults(results) {
   if (results.image) {
-    // Flip the canvas horizontally so left hand appears on left (not mirrored)
+   
     canvasCtx.save();
     canvasCtx.scale(-1, 1);
     canvasCtx.drawImage(results.image, -canvasOutput.width, 0, canvasOutput.width, canvasOutput.height);
@@ -183,16 +178,16 @@ function onHandResults(results) {
 
   for (let i = 0; i < landmarksArr.length; i++) {
     const lm = landmarksArr[i];
-    // FLIP the hand labels because camera is flipped
+   
     let handed = handedArr[i] && handedArr[i].label ? handedArr[i].label : "Unknown";
-    // Swap Left <-> Right to match actual hand positions
+
     if (handed === "Left") handed = "Right";
     else if (handed === "Right") handed = "Left";
 
     if (handed === "Left") {
       const dist = pinchDistance(lm);
 
-      // Low-pass filter with a fast path when fingers really meet
+  
       if (smoothedLeftPinchDist === null) smoothedLeftPinchDist = dist;
       smoothedLeftPinchDist =
         smoothedLeftPinchDist * (1 - PINCH_SMOOTH) + dist * PINCH_SMOOTH;
@@ -211,7 +206,7 @@ function onHandResults(results) {
 
     if (handed === "Right") {
       const open = opennessScore(lm);
-      rightOpen = open > 0.18;  // Lowered for more sensitive detection
+      rightOpen = open > 0.18; 
       rightX = avgX(lm);
 
       if (hand2Status) hand2Status.textContent = rightOpen ? 'RIGHT: ✋ Open (Story)' : 'RIGHT: 🤚 Closed';
@@ -223,7 +218,6 @@ function onHandResults(results) {
   updateModelRotation();
 }
 
-// Wait for MediaPipe to load
 console.log('Waiting for MediaPipe to load...');
 const checkReady = setInterval(() => {
     if (typeof Hands !== 'undefined' && typeof Camera !== 'undefined') {

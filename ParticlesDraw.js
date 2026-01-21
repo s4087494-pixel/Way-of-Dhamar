@@ -1,30 +1,30 @@
-// sketch4.js — Pseudo ink drawing (spawns on cursor move, fast fade, minimal trails)
+
 
 let particles = [];
 let lastX = null;
 let lastY = null;
 let isDragging = false;
 
-// === TWEAK ZONE ===
-const BG = { r: 0, g: 0, b: 0, a: 0 };      // background not drawn; trails faded via compositing
-const TRAIL_FADE_ALPHA = 15;                 // 0-255. ~15 removes ~6%/frame ⇒ ~1s lifetime at 60fps
-const INK = { r: 40, g: 80, b: 70 };               // lighter ink (was 0, 35, 25)
+
+const BG = { r: 0, g: 0, b: 0, a: 0 };     
+const TRAIL_FADE_ALPHA = 15;               
+const INK = { r: 40, g: 80, b: 70 };             
 const SPAWN = {
-  rate: 1.3,            // fade over ~1.5 seconds at 60fps
-  startAlpha: 120,      // HIGHER = longer life (was 60)
+  rate: 1.3,            
+  startAlpha: 120,      
   size: 3,
-  minMove: 3,        // higher = fewer spawn points (was 1.2)
-  density: 1           // how many particles per spawn (1-4 is typical)
+  minMove: 3,       
+  density: 1         
 };
-const KILL_ALPHA = 3;                              // remove when very faint (was 8)
-const MAX_PARTICLES = 5000;                        // limit total particles to prevent lag
+const KILL_ALPHA = 3;                           
+const MAX_PARTICLES = 5000;                   
 const NOISE_SCALE = 0.002;
 const VELOCITY_RANDOM = 0.8;
 
 function setup() {
   const cnv = createCanvas(windowWidth, windowHeight);
-  clear();  // transparent background
-  // Ensure canvas doesn't block hover/clicks on underlying elements
+  clear(); 
+ 
   cnv.canvas.style.pointerEvents = 'none';
   cnv.style('position', 'fixed');
   cnv.style('top', '0');
@@ -35,8 +35,6 @@ function setup() {
 }
 
 function draw() {
-  // Fade all existing pixels uniformly without tinting background
-  // destination-out subtracts alpha so older pixels disappear gradually
   drawingContext.save();
   drawingContext.globalCompositeOperation = 'destination-out';
   noStroke();
@@ -44,12 +42,12 @@ function draw() {
   rect(0, 0, width, height);
   drawingContext.restore();
 
-  // spawn only when dragging (mouse pressed + moving)
+
   if (isDragging) {
     spawnOnMove(mouseX, mouseY);
   }
 
-  // update + draw
+  
   for (let i = particles.length - 1; i >= 0; i--) {
     particles[i].update(particles);
     particles[i].show();
@@ -68,8 +66,8 @@ function spawnOnMove(x, y) {
   const d = Math.hypot(dx, dy);
 
   if (d >= SPAWN.minMove) {
-    // Reduced steps for better performance
-    const steps = Math.max(1, Math.floor(d / 12));  // was d/6
+   
+    const steps = Math.max(1, Math.floor(d / 12)); 
     for (let s = 0; s < steps; s++) {
       const t = steps === 1 ? 1 : s / (steps - 1);
       const px = lastX + dx * t;
@@ -135,7 +133,7 @@ function touchMoved() {
   return false; // prevent page scroll
 }
 
-// === PARTICLE CLASS ===
+
 class Particle {
   constructor(x, y, r, a, s, vx = null, vy = null) {
     this.location = createVector(x, y);
@@ -171,8 +169,7 @@ class Particle {
     this.location.add(this.velocity);
     this.alpha -= this.rate;
 
-    // Recursion disabled for performance
-    // (was creating exponential particle growth)
+
   }
 
   show() {

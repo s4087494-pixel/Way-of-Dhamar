@@ -34,7 +34,6 @@ function avgX(landmarks) {
 }
 
 function onHandResults(results) {
-    // Clear canvas
     canvasCtx.clearRect(0, 0, canvasOutput.width, canvasOutput.height);
     
     if (results.image) {

@@ -1,4 +1,4 @@
-// Hand Scene - Fresh Start
+
 const handScene = new THREE.Scene();
 let handModel = null;
 
@@ -51,7 +51,7 @@ document.addEventListener('mousemove', (event) => {
     handMouseY = event.clientY / window.innerHeight;
 });
 
-// Function to get hand scale based on screen width
+// get hand scale based on screen width
 function getHandScale() {
     const screenWidth = window.innerWidth;
     
@@ -86,7 +86,7 @@ handLoader.load('assets/3D/hand.glb', (gltf) => {
         handCamera = gltf.cameras[0];
         handCamera.aspect = window.innerWidth / window.innerHeight;
         // Reduce FOV to make hand appear smaller
-        handCamera.fov = 40; // Smaller FOV = smaller looking objects
+        handCamera.fov = 40; 
         handCamera.updateProjectionMatrix();
         handControls.object = handCamera;
         handControls.update();
@@ -95,14 +95,14 @@ handLoader.load('assets/3D/hand.glb', (gltf) => {
     // Store initial camera position for parallax
     initialHandCameraPos = handCamera.position.clone();
     
-    // Scale down GLB lights - your preferred settings
+    // Scale down GLB lights 
     handModel.traverse((child) => {
         if (child.isLight) {
             child.intensity *= 0.003;
         }
     });
     
-    // Fallback lights - your preferred settings
+    // Fallback lights 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.35);
     handScene.add(ambientLight);
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
