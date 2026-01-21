@@ -19,7 +19,7 @@ handRenderer.physicallyCorrectLights = true;
 document.body.appendChild(handRenderer.domElement);
 handRenderer.domElement.style.position = 'absolute';
 handRenderer.domElement.style.top = '0';
-handRenderer.domElement.style.left = '0';
+handRenderer.domElement.style.left = '-200px';
 handRenderer.domElement.style.zIndex = '-2';
 handRenderer.domElement.style.pointerEvents = 'none';
 
@@ -85,6 +85,8 @@ handLoader.load('assets/3D/hand.glb', (gltf) => {
     if (gltf.cameras && gltf.cameras.length > 0) {
         handCamera = gltf.cameras[0];
         handCamera.aspect = window.innerWidth / window.innerHeight;
+        // Reduce FOV to make hand appear smaller
+        handCamera.fov = 40; // Smaller FOV = smaller looking objects
         handCamera.updateProjectionMatrix();
         handControls.object = handCamera;
         handControls.update();
@@ -108,11 +110,13 @@ handLoader.load('assets/3D/hand.glb', (gltf) => {
     handScene.add(dirLight);
 
     // Scale model responsively based on screen size
-    const scale = getHandScale();
+    const scale = getHandScale() * 0.5; // 50% smaller
     handModel.scale.set(scale, scale, scale);
     
-    // Move model down
-    handModel.position.y = -0.032;
+    // Position hand - down slightly
+    handModel.position.x = 0;
+    handModel.position.y = -0.02;
+    handModel.position.z = 0;
     
     // Add model to scene
     handScene.add(handModel);
@@ -146,6 +150,7 @@ animateHand();
 // Handle window resize
 window.addEventListener('resize', () => {
     handCamera.aspect = window.innerWidth / window.innerHeight;
+    handCamera.fov = 40; // Maintain smaller FOV for smaller hand
     handCamera.updateProjectionMatrix();
     handRenderer.setSize(window.innerWidth, window.innerHeight);
     
