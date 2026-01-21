@@ -19,7 +19,7 @@ handRenderer.physicallyCorrectLights = true;
 document.body.appendChild(handRenderer.domElement);
 handRenderer.domElement.style.position = 'absolute';
 handRenderer.domElement.style.top = '0';
-handRenderer.domElement.style.left = '-200px';
+handRenderer.domElement.style.left = '50px';
 handRenderer.domElement.style.zIndex = '-2';
 handRenderer.domElement.style.pointerEvents = 'none';
 
