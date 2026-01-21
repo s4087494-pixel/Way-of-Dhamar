@@ -172,7 +172,7 @@ function onHandResults(results) {
     if (hand1Status) hand1Status.textContent = '-';
     if (hand2Status) hand2Status.textContent = '-';
     updateSceneVisibility();
-    updateModelRotation();
+  
     return;
   }
 
@@ -215,7 +215,7 @@ function onHandResults(results) {
   }
 
   updateSceneVisibility();
-  updateModelRotation();
+  // updateModelRotation(); // Removed: function not defined
 }
 
 console.log('Waiting for MediaPipe to load...');

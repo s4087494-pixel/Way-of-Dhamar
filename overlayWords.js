@@ -37,7 +37,7 @@ const STYLE = {
   glowRGB: [255, 248, 200],
   haloAlpha: 200,
 
-  // text glow (ADD THESE because your later code uses them)
+  // text glow 
   glowAlpha: 255,
   glowBlur: 45
 };
