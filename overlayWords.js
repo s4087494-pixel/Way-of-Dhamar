@@ -21,7 +21,7 @@
 
   // === LOOK ===
 const STYLE = {
-  fontPath: "assets/typefaces/Legitima-Italic.ttf",
+  fontPath: "assets/typefaces/Legitima-Italic.woff2",
   size: 34,
   sampleFactor: 0.2,
 
